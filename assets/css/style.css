@@ -1,0 +1,9 @@
+:root {
+  font-family: Noto Sans TC, serif;
+}
+:root body {
+  margin: 0;
+}
+:root * {
+  box-sizing: border-box;
+}/*# sourceMappingURL=style.css.map */

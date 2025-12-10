@@ -1,6 +1,6 @@
 <template>
   <div>
-    <label></label>
+    <label>{{ label }}</label>
     <input />
   </div>
 </template>
@@ -14,4 +14,21 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {})
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+label {
+  display: block;
+  text-align: left;
+}
+
+div {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+</style>

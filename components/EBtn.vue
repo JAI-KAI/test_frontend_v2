@@ -1,5 +1,5 @@
 <template>
-  <button>
+  <button class="e-btn" :class="'e-btn-' + color">
     <slot />
   </button>
 </template>
@@ -15,16 +15,40 @@ const props = withDefaults(defineProps<Props>(), {})
 
 <style scoped lang="scss">
 .e-btn {
+  color: white;
+  padding: 5px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border: none;
+
   // success 綠
   &-success {
+    background-color: #21c46d;
+
+
+    &:hover {
+      background-color: #2f855a;
+    }
   }
 
   // error 紅
   &-error {
+    background-color: #e53e3e;
+
+    &:hover {
+      background-color: #9b2c2c;
+    }
   }
 
   // warn 黃
   &-warn {
+    color: black;
+    background-color: #efbc15;
+
+    &:hover {
+      background-color: #b18802;
+    }
   }
 }
 </style>
