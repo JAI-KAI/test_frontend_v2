@@ -1,4 +1,11 @@
 {
   "welcome": "Welcome",
-  "test": "Test"
+  "test": "Test",
+  "operation": "Operation",
+  "name": "Name",
+  "age": "Age",
+  "edit": "Edit",
+  "add" : "Add",
+  "confirm": "Confirm",
+  "cancel": "Cancel"
 }

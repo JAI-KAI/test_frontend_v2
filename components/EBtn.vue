@@ -15,6 +15,8 @@ const props = withDefaults(defineProps<Props>(), {})
 
 <style scoped lang="scss">
 .e-btn {
+  min-width: 60px;
+  height: 36px;
   color: white;
   padding: 5px 15px;
   border-radius: 5px;
@@ -30,6 +32,10 @@ const props = withDefaults(defineProps<Props>(), {})
     &:hover {
       background-color: #2f855a;
     }
+
+    &:active {
+      background-color: #276749;
+    }
   }
 
   // error 紅
@@ -38,6 +44,10 @@ const props = withDefaults(defineProps<Props>(), {})
 
     &:hover {
       background-color: #9b2c2c;
+    }
+
+    &:active {
+      background-color: #742a2a;
     }
   }
 
@@ -48,6 +58,10 @@ const props = withDefaults(defineProps<Props>(), {})
 
     &:hover {
       background-color: #b18802;
+    }
+
+    &:active {
+      background-color: #975a03;
     }
   }
 }
