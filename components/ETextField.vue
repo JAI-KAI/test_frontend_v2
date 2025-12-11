@@ -27,7 +27,7 @@ div {
 
 input {
   width: 100%;
-  padding: 8px;
+  padding: 4px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }

@@ -6,6 +6,7 @@
   "age": "Age",
   "edit": "Edit",
   "add" : "Add",
+  "delete": "Delete",
   "confirm": "Confirm",
   "cancel": "Cancel"
 }

@@ -15,14 +15,14 @@ const props = withDefaults(defineProps<Props>(), {})
 
 <style scoped lang="scss">
 .e-btn {
-  min-width: 60px;
-  height: 36px;
+  min-width: 50px;
+  height: 30px;
   color: white;
-  padding: 5px 15px;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
   border: none;
+  text-align: center;
 
   // success 綠
   &-success {

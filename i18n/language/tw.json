@@ -2,10 +2,11 @@
   "welcome": "歡迎",
   "test": "測試",
   "operation": "操作",
-  "name": "名子",
+  "name": "名字",
   "age": "年齡",
   "edit":  "修改",
   "add" : "新增",
+  "delete": "刪除",
   "confirm": "確認",
   "cancel": "取消"
 }

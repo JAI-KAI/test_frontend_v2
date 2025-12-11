@@ -1,16 +1,16 @@
 <template>
   <div class="container">
-    <div class="bts-Locale">
+    <div class="btns-Locale">
       <EBtn color="success" @click="setLocale('zh-TW')">繁體中文</EBtn>
       <EBtn color="success" @click="setLocale('en-US')">English</EBtn>
     </div>
     <div class="operate">
-      <h2>{{ $t('operation') }}</h2>
+      <span>{{ $t('operation') }}</span>
       <div class="textfields">
         <ETextField :label="$t('name')" />
         <ETextField :label="$t('age')" />
       </div>
-      <div class="bts-operate">
+      <div class="btns-operate">
         <EBtn color="success">{{ $t('edit') }}</EBtn>
         <EBtn color="warn">{{ $t('add') }}</EBtn>
       </div>
@@ -26,6 +26,51 @@
           </tr>
         </thead>
         <tbody>
+          <tr>
+            <td>1</td>
+            <td>小王</td>
+            <td>30</td>
+            <td class="btns-profile">
+              <EBtn color="success">{{ $t('edit') }}</EBtn>
+              <EBtn color="error">{{ $t('delete') }}</EBtn>
+            </td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>小王</td>
+            <td>30</td>
+            <td class="btns-profile">
+              <EBtn color="success">{{ $t('edit') }}</EBtn>
+              <EBtn color="error">{{ $t('delete') }}</EBtn>
+            </td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>小王</td>
+            <td>30</td>
+            <td class="btns-profile">
+              <EBtn color="success">{{ $t('edit') }}</EBtn>
+              <EBtn color="error">{{ $t('delete') }}</EBtn>
+            </td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>小王</td>
+            <td>30</td>
+            <td class="btns-profile">
+              <EBtn color="success">{{ $t('edit') }}</EBtn>
+              <EBtn color="error">{{ $t('delete') }}</EBtn>
+            </td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>小王</td>
+            <td>30</td>
+            <td class="btns-profile">
+              <EBtn color="success">{{ $t('edit') }}</EBtn>
+              <EBtn color="error">{{ $t('delete') }}</EBtn>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -85,34 +130,44 @@ const deleteData = async (id: number) => {
   min-height: 100vh;
   max-width: 100%;
   width: 100%;
-  padding: 100px 80px;
+  padding: 50px 20px;
   background-color: gray;
   color: white;
 
-  .bts-Locale {
+  .btns-Locale {
+    display: flex;
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 5px;
+    right: 5px;
 
     >*:not(:first-child) {
-      margin-left: 5px;
+      margin-left: 3px;
     }
   }
 
   .operate {
-    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    flex: 1 1 0;
     text-align: center;
     border: 1px solid white;
     border-radius: 10px;
-    padding: 30px 80px;
+    padding: 20px 40px;
+
+    >span {
+      font-size: 18px;
+      font-weight: bold;
+    }
 
     .textfields {
       >*:not(:first-child) {
-        margin-top: 20px;
+        margin-top: 5px;
       }
     }
 
-    .bts-operate {
+    .btns-operate {
       display: flex;
       justify-content: end;
       margin-top: 30px;
@@ -124,20 +179,184 @@ const deleteData = async (id: number) => {
   }
 
   .profile {
-    flex: 1;
+    flex: 1 1 0;
     text-align: center;
     border: 1px solid white;
     border-radius: 10px;
-    margin-top: 50px;
-    padding: 30px 80px;
+    margin-top: 20px;
+    padding: 10px 20px;
+    overflow: scroll;
+    overflow-x: hidden;
 
     table {
       table-layout: fixed;
       width: 100%;
+      border-collapse: collapse;
 
-      tr {}
+      tbody {
+        tr {
+          border-bottom: 1px solid white;
+
+          td {
+            padding: 5px 0;
+          }
+        }
+
+        .btns-profile {
+          display: flex;
+          justify-content: center;
+
+          >*:not(:first-child) {
+            margin-left: 5px;
+          }
+
+          .e-btn {
+            min-width: 30px;
+            height: 40px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 120px 100px;
+
+    .btns-Locale {
+      top: 10px;
+      right: 10px;
+
+      >*:not(:first-child) {
+        margin-left: 5px;
+      }
     }
 
+    .operate {
+      padding: 40px 80px;
+
+      .textfields {
+        >*:not(:first-child) {
+          margin-top: 15px;
+        }
+      }
+
+      .btns-operate {
+        margin-top: 50px;
+
+        :first-child {
+          margin-right: 20px;
+        }
+      }
+    }
+
+    .profile {
+      margin-top: 40px;
+      padding: 20px 60px;
+
+      table {
+        tbody {
+          tr {
+            td {
+              padding: 10px 0;
+            }
+          }
+
+          tr:first-child td {
+            padding-top: 30px;
+          }
+
+          .btns-profile {
+            display: flex;
+            justify-content: center;
+
+            >*:not(:first-child) {
+              margin-left: 5px;
+            }
+
+            .e-btn {
+              min-width: 40px;
+              height: 30px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: 80px 300px;
+
+    .btns-Locale {
+      top: 20px;
+      right: 50px;
+
+      >*:not(:first-child) {
+        margin-left: 10px;
+      }
+    }
+
+    .operate {
+      padding: 50px 120px;
+
+      .textfields {
+        >*:not(:first-child) {
+          margin-top: 15px;
+        }
+      }
+
+      .btns-operate {
+        margin-top: 60px;
+
+        .e-btn {
+          min-width: 60px;
+          height: 35px;
+
+
+        }
+
+        :first-child {
+          margin-right: 20px;
+        }
+
+      }
+    }
+
+    .profile {
+      margin-top: 40px;
+      padding: 20px 60px;
+
+      table {
+        tbody {
+          tr {
+            td {
+              padding: 15px 0;
+            }
+          }
+
+          tr:first-child td {
+            padding-top: 40px;
+          }
+
+          .btns-profile {
+            display: flex;
+            justify-content: center;
+
+            >*:not(:first-child) {
+              margin-left: 10px;
+            }
+
+            .e-btn {
+              min-width: 45px;
+              height: 35px;
+            }
+          }
+        }
+      }
+    }
   }
 }
 </style>
