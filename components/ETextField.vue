@@ -1,7 +1,7 @@
 <template>
   <div>
     <label>{{ label }}</label>
-    <input />
+    <input v-model="userInput" :type="props.type" />
   </div>
 </template>
 
@@ -9,9 +9,13 @@
 interface Props {
   id?: string // 若使用者有輸入，以使用者輸入的為主，若沒有請產出一個唯一 ID
   label?: string
+  type?: string
 }
 
-const props = withDefaults(defineProps<Props>(), {})
+const props = withDefaults(defineProps<Props>(), { type: 'text' })
+const userInput = defineModel<string | number>({ required: true })
+
+
 </script>
 
 <style scoped lang="scss">
@@ -27,8 +31,14 @@ div {
 
 input {
   width: 100%;
-  padding: 4px;
+  padding: 4px 6px;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+@media (min-width: 1024px) {
+  input {
+    padding: 8px 12px;
+  }
 }
 </style>

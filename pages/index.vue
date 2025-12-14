@@ -4,15 +4,24 @@
       <EBtn color="success" @click="setLocale('zh-TW')">繁體中文</EBtn>
       <EBtn color="success" @click="setLocale('en-US')">English</EBtn>
     </div>
+    <dialog ref="dialog">
+      <div class="dialog-content">
+        <p>{{ dialogState == 'add' ? '確定新增嗎' : dialogState == 'edit' ? '確定編輯嗎' : '確定刪除嗎' }}</p>
+        <div>
+          <EBtn @click="closeDialog" color="error">{{ $t('cancel') }}</EBtn>
+          <EBtn @click="handleConfirm" color="success">{{ $t('confirm') }}</EBtn>
+        </div>
+      </div>
+    </dialog>
     <div class="operate">
       <span>{{ $t('operation') }}</span>
       <div class="textfields">
-        <ETextField :label="$t('name')" />
-        <ETextField :label="$t('age')" />
+        <ETextField v-model="inputName" type="string" :label="$t('name')" />
+        <ETextField v-model="inputAge" type="number" :label="$t('age')" />
       </div>
       <div class="btns-operate">
-        <EBtn color="success">{{ $t('edit') }}</EBtn>
-        <EBtn color="warn">{{ $t('add') }}</EBtn>
+        <EBtn @click="openDialog('edit', currentUserId)" color="success">{{ $t('edit') }}</EBtn>
+        <EBtn @click="openDialog('add')" color="warn">{{ $t('add') }}</EBtn>
       </div>
     </div>
     <div class="profile">
@@ -26,49 +35,15 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>小王</td>
-            <td>30</td>
+          <tr v-for="user in userStore.userData" :key="user.id">
+            <td>{{ user.id }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.age }}</td>
             <td class="btns-profile">
-              <EBtn color="success">{{ $t('edit') }}</EBtn>
-              <EBtn color="error">{{ $t('delete') }}</EBtn>
-            </td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>小王</td>
-            <td>30</td>
-            <td class="btns-profile">
-              <EBtn color="success">{{ $t('edit') }}</EBtn>
-              <EBtn color="error">{{ $t('delete') }}</EBtn>
-            </td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>小王</td>
-            <td>30</td>
-            <td class="btns-profile">
-              <EBtn color="success">{{ $t('edit') }}</EBtn>
-              <EBtn color="error">{{ $t('delete') }}</EBtn>
-            </td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>小王</td>
-            <td>30</td>
-            <td class="btns-profile">
-              <EBtn color="success">{{ $t('edit') }}</EBtn>
-              <EBtn color="error">{{ $t('delete') }}</EBtn>
-            </td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>小王</td>
-            <td>30</td>
-            <td class="btns-profile">
-              <EBtn color="success">{{ $t('edit') }}</EBtn>
-              <EBtn color="error">{{ $t('delete') }}</EBtn>
+              <EBtn @click="handleEdit({ id: user.id, name: user.name, age: user.age })" color="success">
+                {{ $t('edit') }}
+              </EBtn>
+              <EBtn @click="openDialog('delete', user.id)" color="error">{{ $t('delete') }}</EBtn>
             </td>
           </tr>
         </tbody>
@@ -80,6 +55,8 @@
 <script setup lang="ts">
 import axios from 'axios';
 import { useI18n } from 'vue-i18n';
+import { useAppStore } from '~/store/app';
+const userStore = useAppStore();
 // vue-i18n
 const { t, locale } = useI18n();
 
@@ -87,16 +64,67 @@ const setLocale = (lang: "zh-TW" | "en-US") => {
   locale.value = lang;
 };
 
+// input 欄位綁定
+const inputName = ref('');
+const inputAge = ref<number>(0);
+
+// dialog
+const dialog = ref<HTMLDialogElement | null>(null);
+const dialogState = ref<'add' | 'edit' | 'delete' | null>(null);
+const currentUserId = ref<number | null | undefined>(null);
+
+const openDialog = (state: 'add' | 'edit' | 'delete' | null, id?: number | null) => {
+  dialogState.value = state;
+  currentUserId.value = id;
+  dialog.value?.showModal();
+};
+const closeDialog = () => {
+  dialog.value?.close();
+};
+const handleConfirm = () => {
+  if (dialogState.value === 'add') {
+    addData({ name: inputName.value, age: inputAge.value });
+  } else if (dialogState.value === 'edit' && currentUserId.value) {
+    editData(currentUserId.value, { name: inputName.value, age: inputAge.value });
+  } else if (dialogState.value === 'delete' && currentUserId.value) {
+    deleteData(currentUserId.value);
+  }
+
+  closeDialog();
+}
+
+const handleEdit = (user: UserData) => {
+  inputName.value = user.name;
+  inputAge.value = user.age;
+  currentUserId.value = user.id;
+  console.log(currentUserId.value);
+};
 // axios 
 const baseUrl = 'https://40875.wu.elitepro.ltd' // 後端網址 將由面試官提供
 
-const { data } = await useAsyncData('user', () =>
-  axios.get(baseUrl)
-);
+export interface UserData {
+  id?: number;
+  name: string;
+  age: number;
+}
 
-const addData = async (userInput: {}) => {
+const { data: userData } = await useAsyncData<UserData[]>('user', async () => {
+  const response = await axios.get(`${baseUrl}/api/user`)
+  return response.data.data
+});
+
+if (userData.value) {
+  console.log('Fetched data:', userData.value);
+  userStore.setUserData(userData.value);
+} else {
+  console.log('No data fetched');
+}
+
+const addData = async (userInput: UserData) => {
   try {
-    const response = await axios.post(baseUrl, userInput);
+    const response = await axios.post(`${baseUrl}/api/user`, userInput);
+    userStore.userData.push({ ...userInput, id: response.data.id });
+    closeDialog();
     console.log('Data added:', response.data);
   } catch (error) {
     console.error('Error adding data:', error);
@@ -105,7 +133,7 @@ const addData = async (userInput: {}) => {
 
 const editData = async (id: number, userInput: {}) => {
   try {
-    const response = await axios.put(`${baseUrl}/${id}`, userInput);
+    const response = await axios.put(`${baseUrl}/api/user`, { id, ...userInput });
     console.log('Data edited:', response.data);
   } catch (error) {
     console.error('Error editing data:', error);
@@ -114,7 +142,8 @@ const editData = async (id: number, userInput: {}) => {
 
 const deleteData = async (id: number) => {
   try {
-    const response = await axios.delete(`${baseUrl}/${id}`);
+    const response = await axios.delete(`${baseUrl}/api/user`, { data: { id: id } });
+    userStore.userData = userStore.userData.filter(user => user.id !== id)
     console.log('Data deleted:', response.data);
   } catch (error) {
     console.error('Error deleting data:', error);
@@ -144,6 +173,28 @@ const deleteData = async (id: number) => {
       margin-left: 3px;
     }
   }
+
+
+  dialog {
+    width: 300px;
+    border: none;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+
+    .dialog-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .e-btn {
+      margin: 0 10px;
+    }
+  }
+
 
   .operate {
     display: flex;
@@ -233,6 +284,15 @@ const deleteData = async (id: number) => {
       }
     }
 
+    dialog {
+      width: 400px;
+      padding: 30px;
+
+      .dialog-content {
+        gap: 30px;
+      }
+    }
+
     .operate {
       padding: 40px 80px;
 
@@ -296,6 +356,15 @@ const deleteData = async (id: number) => {
 
       >*:not(:first-child) {
         margin-left: 10px;
+      }
+    }
+
+    dialog {
+      width: 600px;
+      padding: 40px;
+
+      .dialog-content {
+        gap: 40px;
       }
     }
 
