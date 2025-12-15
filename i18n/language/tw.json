@@ -8,5 +8,8 @@
   "add" : "新增",
   "delete": "刪除",
   "confirm": "確認",
-  "cancel": "取消"
+  "cancel": "取消",
+  "dialog_confirm_add": "確定新增嗎",
+  "dialog_confirm_edit": "確定編輯嗎",
+  "dialog_confirm_delete": "確定刪除嗎"
 }

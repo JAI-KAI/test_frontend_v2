@@ -8,5 +8,8 @@
   "add" : "Add",
   "delete": "Delete",
   "confirm": "Confirm",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "dialog_confirm_add": "Confirm Add?",
+  "dialog_confirm_edit": "Confirm Edit?",
+  "dialog_confirm_delete": "Confirm Delete?"
 }

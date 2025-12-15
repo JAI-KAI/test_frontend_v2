@@ -6,7 +6,8 @@
     </div>
     <dialog ref="dialog">
       <div class="dialog-content">
-        <p>{{ dialogState == 'add' ? '確定新增嗎' : dialogState == 'edit' ? '確定編輯嗎' : '確定刪除嗎' }}</p>
+        <p>{{ $t(dialogState == 'add' ? 'dialog_confirm_add' : dialogState == 'edit' ? 'dialog_confirm_edit' :
+          'dialog_confirm_delete') }}</p>
         <div>
           <EBtn @click="closeDialog" color="error">{{ $t('cancel') }}</EBtn>
           <EBtn @click="handleConfirm" color="success">{{ $t('confirm') }}</EBtn>
@@ -99,6 +100,7 @@ const handleEdit = (user: UserData) => {
   currentUserId.value = user.id;
   console.log(currentUserId.value);
 };
+
 // axios 
 const baseUrl = 'https://40875.wu.elitepro.ltd' // 後端網址 將由面試官提供
 
@@ -108,6 +110,8 @@ export interface UserData {
   age: number;
 }
 
+
+//獲取資料
 const { data: userData } = await useAsyncData<UserData[]>('user', async () => {
   const response = await axios.get(`${baseUrl}/api/user`)
   return response.data.data
@@ -123,17 +127,21 @@ if (userData.value) {
 const addData = async (userInput: UserData) => {
   try {
     const response = await axios.post(`${baseUrl}/api/user`, userInput);
-    userStore.userData.push({ ...userInput, id: response.data.id });
-    closeDialog();
+    const { id } = response.data.data;
+    userStore.userData.push({ ...userInput, id });
+    resetInputFields();
     console.log('Data added:', response.data);
   } catch (error) {
     console.error('Error adding data:', error);
   }
 };
 
-const editData = async (id: number, userInput: {}) => {
+const editData = async (id: number, userInput: UserData) => {
   try {
     const response = await axios.put(`${baseUrl}/api/user`, { id, ...userInput });
+    const index = userStore.userData.findIndex((user) => user.id == id)
+    userStore.userData[index] = { id, ...userInput }
+    resetInputFields();
     console.log('Data edited:', response.data);
   } catch (error) {
     console.error('Error editing data:', error);
@@ -148,6 +156,12 @@ const deleteData = async (id: number) => {
   } catch (error) {
     console.error('Error deleting data:', error);
   }
+};
+
+const resetInputFields = () => {
+  inputName.value = '';
+  inputAge.value = 0;
+  currentUserId.value = null
 };
 
 </script>
