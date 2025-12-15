@@ -18,7 +18,7 @@
       <span>{{ $t('operation') }}</span>
       <div class="textfields">
         <ETextField v-model="inputName" type="string" :label="$t('name')" />
-        <ETextField v-model="inputAge" type="number" :label="$t('age')" />
+        <ETextField v-model.number="inputAge" type="number" :label="$t('age')" />
       </div>
       <div class="btns-operate">
         <EBtn @click="openDialog('edit', currentUserId)" color="success">{{ $t('edit') }}</EBtn>
@@ -83,10 +83,16 @@ const closeDialog = () => {
   dialog.value?.close();
 };
 const handleConfirm = () => {
-  if (dialogState.value === 'add') {
-    addData({ name: inputName.value, age: inputAge.value });
-  } else if (dialogState.value === 'edit' && currentUserId.value) {
-    editData(currentUserId.value, { name: inputName.value, age: inputAge.value });
+  const cleanInput = {
+    name: inputName.value.trim(),
+    age: inputAge.value
+  }
+  if (dialogState.value === 'add' && checkValid()) {
+    addData(cleanInput);
+
+  } else if (dialogState.value === 'edit' && currentUserId.value && checkValid()) {
+    editData(currentUserId.value, cleanInput);
+
   } else if (dialogState.value === 'delete' && currentUserId.value) {
     deleteData(currentUserId.value);
   }
@@ -98,8 +104,32 @@ const handleEdit = (user: UserData) => {
   inputName.value = user.name;
   inputAge.value = user.age;
   currentUserId.value = user.id;
-  console.log(currentUserId.value);
 };
+
+// 前端資料驗證
+const checkValid = () => {
+  let isValid = true; // 有效性標記
+  const trimmedName = inputName.value.trim()
+  if (!trimmedName) {
+    isValid = false
+    console.log('名字為必填。');
+  } else if (trimmedName.length < 2 || trimmedName.length > 10) {
+    isValid = false
+    console.log('名字長度需在 2 到 10 個字元之間。');
+  } else if (!isNaN(Number(trimmedName))) {
+    isValid = false
+    console.log('名字不可為數字組成',)
+  }
+
+  if (!inputAge.value) {
+    isValid = false;
+    console.log('年齡為必填。');
+  } else if (inputAge.value < 1 || inputAge.value > 100) {
+    isValid = false;
+    console.log('年齡需介於 1 到 100 歲之間。');
+  }
+  return isValid
+}
 
 // axios 
 const baseUrl = 'https://40875.wu.elitepro.ltd' // 後端網址 將由面試官提供
