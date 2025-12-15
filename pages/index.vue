@@ -156,10 +156,11 @@ const deleteData = async (id: number) => {
 .container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
   max-width: 100%;
   width: 100%;
   padding: 50px 20px;
+  gap: 20px;
   background-color: gray;
   color: white;
 
@@ -201,7 +202,8 @@ const deleteData = async (id: number) => {
     flex-direction: column;
     justify-content: center;
     width: 100%;
-    flex: 1 1 0;
+    flex: 1;
+    min-height: 0;
     text-align: center;
     border: 1px solid white;
     border-radius: 10px;
@@ -230,13 +232,13 @@ const deleteData = async (id: number) => {
   }
 
   .profile {
-    flex: 1 1 0;
     text-align: center;
     border: 1px solid white;
     border-radius: 10px;
-    margin-top: 20px;
     padding: 10px 20px;
-    overflow: scroll;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
     overflow-x: hidden;
 
     table {
@@ -274,6 +276,7 @@ const deleteData = async (id: number) => {
 @media (min-width: 768px) {
   .container {
     padding: 120px 100px;
+    gap: 30px;
 
     .btns-Locale {
       top: 10px;
@@ -312,7 +315,6 @@ const deleteData = async (id: number) => {
     }
 
     .profile {
-      margin-top: 40px;
       padding: 20px 60px;
 
       table {
@@ -348,7 +350,8 @@ const deleteData = async (id: number) => {
 
 @media (min-width: 1024px) {
   .container {
-    padding: 80px 300px;
+    padding: 50px 300px;
+    gap: 40px;
 
     .btns-Locale {
       top: 20px;
@@ -395,7 +398,6 @@ const deleteData = async (id: number) => {
     }
 
     .profile {
-      margin-top: 40px;
       padding: 20px 60px;
 
       table {
