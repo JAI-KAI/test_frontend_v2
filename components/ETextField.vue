@@ -1,19 +1,29 @@
 <template>
   <div>
     <label>{{ label }}</label>
-    <input v-model="userInput" :type="props.type" />
+    <input v-model="value" :type="props.type" />
   </div>
 </template>
 
 <script setup lang="ts">
+
 interface Props {
   id?: string // 若使用者有輸入，以使用者輸入的為主，若沒有請產出一個唯一 ID
   label?: string
   type?: string
+  modelValue?: string | number
 }
+const props = withDefaults(defineProps<Props>(), { type: 'text', modelValue: '' })
+const emit = defineEmits(['update:modelValue'])
 
-const props = withDefaults(defineProps<Props>(), { type: 'text' })
-const userInput = defineModel<string | number>({ required: true })
+const value = computed({
+  get() {
+    return props.modelValue
+  },
+  set(newValue) {
+    emit('update:modelValue', newValue)
+  }
+})
 
 
 </script>

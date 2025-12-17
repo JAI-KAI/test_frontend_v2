@@ -17,7 +17,7 @@
     <div class="operate">
       <span>{{ $t('operation') }}</span>
       <div class="textfields">
-        <ETextField v-model="inputName" type="string" :label="$t('name')" />
+        <ETextField v-model="inputName" type="text" :label="$t('name')" />
         <ETextField v-model.number="inputAge" type="number" :label="$t('age')" />
       </div>
       <div class="btns-operate">
