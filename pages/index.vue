@@ -6,23 +6,23 @@
     </div>
     <dialog ref="dialog">
       <div class="dialog-content">
-        <p>{{ $t(dialogState == 'add' ? 'dialog_confirm_add' : dialogState == 'edit' ? 'dialog_confirm_edit' :
+        <p>{{ t(dialogState == 'add' ? 'dialog_confirm_add' : dialogState == 'edit' ? 'dialog_confirm_edit' :
           'dialog_confirm_delete') }}</p>
         <div>
-          <EBtn @click="closeDialog" color="error">{{ $t('cancel') }}</EBtn>
-          <EBtn @click="handleConfirm" color="success">{{ $t('confirm') }}</EBtn>
+          <EBtn @click="closeDialog" color="error">{{ t('cancel') }}</EBtn>
+          <EBtn @click="handleConfirm" color="success">{{ t('confirm') }}</EBtn>
         </div>
       </div>
     </dialog>
     <div class="operate">
-      <span>{{ $t('operation') }}</span>
+      <span>{{ t('operation') }}</span>
       <div class="textfields">
-        <ETextField v-model="inputName" type="text" :label="$t('name')" />
-        <ETextField v-model.number="inputAge" type="number" :label="$t('age')" />
+        <ETextField v-model="inputName" type="text" :label="t('name')" />
+        <ETextField v-model.number="inputAge" type="number" :label="t('age')" />
       </div>
       <div class="btns-operate">
-        <EBtn @click="openDialog('edit', currentUserId)" color="success">{{ $t('edit') }}</EBtn>
-        <EBtn @click="openDialog('add')" color="warn">{{ $t('add') }}</EBtn>
+        <EBtn @click="openDialog('edit', currentUserId)" color="success">{{ t('edit') }}</EBtn>
+        <EBtn @click="openDialog('add')" color="warn">{{ t('add') }}</EBtn>
       </div>
     </div>
     <div class="profile">
@@ -30,9 +30,9 @@
         <thead>
           <tr>
             <th>#</th>
-            <th>{{ $t('name') }}</th>
-            <th>{{ $t('age') }}</th>
-            <th>{{ $t('operation') }}</th>
+            <th>{{ t('name') }}</th>
+            <th>{{ t('age') }}</th>
+            <th>{{ t('operation') }}</th>
           </tr>
         </thead>
         <tbody>
@@ -42,9 +42,9 @@
             <td>{{ user.age }}</td>
             <td class="btns-profile">
               <EBtn @click="handleEdit({ id: user.id, name: user.name, age: user.age })" color="success">
-                {{ $t('edit') }}
+                {{ t('edit') }}
               </EBtn>
-              <EBtn @click="openDialog('delete', user.id)" color="error">{{ $t('delete') }}</EBtn>
+              <EBtn @click="openDialog('delete', user.id)" color="error">{{ t('delete') }}</EBtn>
             </td>
           </tr>
         </tbody>
@@ -57,6 +57,8 @@
 import axios from 'axios';
 import { useI18n } from 'vue-i18n';
 import { useAppStore } from '~/store/app';
+import type { MainGetUserInfoResp } from '~/utils/api';
+import { userApi } from '~/utils/api.instance';
 const userStore = useAppStore();
 // vue-i18n
 const { t, locale } = useI18n();
@@ -66,7 +68,7 @@ const setLocale = (lang: "zh-TW" | "en-US") => {
 };
 
 // input 欄位綁定
-const inputName = ref('');
+const inputName = ref<string>('');
 const inputAge = ref<number>(0);
 
 // dialog
@@ -100,9 +102,9 @@ const handleConfirm = () => {
   closeDialog();
 }
 
-const handleEdit = (user: UserData) => {
-  inputName.value = user.name;
-  inputAge.value = user.age;
+const handleEdit = (user: MainGetUserInfoResp) => {
+  inputName.value = user.name ?? '';
+  inputAge.value = user.age ?? 0;
   currentUserId.value = user.id;
 };
 
@@ -133,7 +135,6 @@ const checkValid = () => {
 
 // axios 
 const baseUrl = 'https://40875.wu.elitepro.ltd' // 後端網址 將由面試官提供
-
 export interface UserData {
   id?: number;
   name: string;
@@ -142,14 +143,18 @@ export interface UserData {
 
 
 //獲取資料
-const { data: userData } = await useAsyncData<UserData[]>('user', async () => {
-  const response = await axios.get(`${baseUrl}/api/user`)
-  return response.data.data
+const { data: userData } = await useAsyncData<MainGetUserInfoResp[]>('user', async () => {
+  try {
+    const response = await userApi.getUserInfo()
+    return response.data.data ?? []
+  } catch (e) {
+    return []
+  }
 });
 
 if (userData.value) {
   console.log('Fetched data:', userData.value);
-  userStore.setUserData(userData.value);
+  userStore.setUserData(userData.value as MainGetUserInfoResp[]);
 } else {
   console.log('No data fetched');
 }

@@ -1,8 +1,8 @@
-import type { UserData } from '~/pages/index.vue';
+import type { MainGetUserInfoResp } from '~/utils/api';
 export const useAppStore = defineStore('app', () => {
-    const userData = ref<UserData[]>([]);
+    const userData = ref<MainGetUserInfoResp[]>([]);
 
-    function setUserData(data: UserData[]) {
+    function setUserData(data: MainGetUserInfoResp[]) {
         userData.value = data;
     }
     return { userData, setUserData };
