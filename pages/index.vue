@@ -54,10 +54,9 @@
 </template>
 
 <script setup lang="ts">
-import axios from 'axios';
 import { useI18n } from 'vue-i18n';
 import { useAppStore } from '~/store/app';
-import type { MainGetUserInfoResp } from '~/utils/api';
+import type { MainCreateUserInfoReq, MainGetUserInfoResp, MainUpdateUserInfoReq } from '~/utils/api';
 import { userApi } from '~/utils/api.instance';
 const userStore = useAppStore();
 // vue-i18n
@@ -154,15 +153,15 @@ const { data: userData } = await useAsyncData<MainGetUserInfoResp[]>('user', asy
 
 if (userData.value) {
   console.log('Fetched data:', userData.value);
-  userStore.setUserData(userData.value as MainGetUserInfoResp[]);
+  userStore.setUserData(userData.value);
 } else {
   console.log('No data fetched');
 }
 
-const addData = async (userInput: UserData) => {
+const addData = async (userInput: MainCreateUserInfoReq) => {
   try {
-    const response = await axios.post(`${baseUrl}/api/user`, userInput);
-    const { id } = response.data.data;
+    const response = await userApi.createUserInfo(userInput);
+    const id = response.data.data?.id;
     userStore.userData.push({ ...userInput, id });
     resetInputFields();
     console.log('Data added:', response.data);
@@ -171,9 +170,9 @@ const addData = async (userInput: UserData) => {
   }
 };
 
-const editData = async (id: number, userInput: UserData) => {
+const editData = async (id: number, userInput: MainUpdateUserInfoReq) => {
   try {
-    const response = await axios.put(`${baseUrl}/api/user`, { id, ...userInput });
+    const response = await userApi.updateUserInfo({ id, ...userInput });
     const index = userStore.userData.findIndex((user) => user.id == id)
     userStore.userData[index] = { id, ...userInput }
     resetInputFields();
@@ -185,7 +184,7 @@ const editData = async (id: number, userInput: UserData) => {
 
 const deleteData = async (id: number) => {
   try {
-    const response = await axios.delete(`${baseUrl}/api/user`, { data: { id: id } });
+    const response = await userApi.deleteUserInfo({ id });
     userStore.userData = userStore.userData.filter(user => user.id !== id)
     console.log('Data deleted:', response.data);
   } catch (error) {
