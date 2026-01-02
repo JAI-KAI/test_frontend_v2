@@ -51,6 +51,7 @@
       </table>
     </div>
   </div>
+  <test :id="55" @my-emit="(e) => console.log(e)" />
 </template>
 
 <script setup lang="ts">
@@ -152,7 +153,6 @@ const { data: userData } = await useAsyncData<MainGetUserInfoResp[]>('user', asy
 });
 
 if (userData.value) {
-  console.log('Fetched data:', userData.value);
   userStore.setUserData(userData.value);
 } else {
   console.log('No data fetched');
