@@ -51,7 +51,8 @@
       </table>
     </div>
   </div>
-  <test :id="55" @my-emit="(e) => console.log(e)" />
+  <Test :id="55" @my-emit="(e) => console.log(e)" />
+  <NuxtLink to="/test">go to test</NuxtLink>
 </template>
 
 <script setup lang="ts">
@@ -151,7 +152,6 @@ const { data: userData } = await useAsyncData<MainGetUserInfoResp[]>('user', asy
     return []
   }
 });
-
 if (userData.value) {
   userStore.setUserData(userData.value);
 } else {
